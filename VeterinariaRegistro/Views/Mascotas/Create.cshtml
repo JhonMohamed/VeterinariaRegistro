@@ -1,0 +1,74 @@
+﻿@model VeterinariaRegistro.ViewModels.MascotaVM
+
+<h1>Crear Nueva Mascota</h1>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" method="post" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label asp-for="NombreMascota" class="form-label">Nombre de la Mascota</label>
+                <input asp-for="NombreMascota" class="form-control" />
+                <span asp-validation-for="NombreMascota" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="NombrePropietario" class="form-label">Nombre del Propietario</label>
+                <input asp-for="NombrePropietario" class="form-control" />
+                <span asp-validation-for="NombrePropietario" class="text-danger"></span>
+            </div>
+            <div class="mb-3 form-check">
+                <input asp-for="Estado" class="form-check-input" type="checkbox" />
+                <label asp-for="Estado" class="form-check-label">Estado</label>
+                <span asp-validation-for="Estado" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Color" class="form-label">Color</label>
+                <input asp-for="Color" class="form-control" />
+                <span asp-validation-for="Color" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="IdTipoMascota" class="form-label">Tipo de Mascota</label>
+                <select asp-for="IdTipoMascota" class="form-select" asp-items="Model.TiposMascotas" id="tipoMascota"></select>
+                <span asp-validation-for="IdTipoMascota" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="IdRazaMascota" class="form-label">Raza de Mascota</label>
+                <select asp-for="IdRazaMascota" class="form-select" id="razaMascota"></select>
+                <span asp-validation-for="IdRazaMascota" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="ImagenFile" class="form-label">Imagen</label>
+                <input asp-for="ImagenFile" type="file" class="form-control" />
+                <span asp-validation-for="ImagenFile" class="text-danger"></span>
+            </div>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <button type="submit" class="btn btn-primary">Nuevo Registro</button>
+                <a class="btn btn-outline-secondary" asp-controller="Mascotas" asp-action="Index" role="button">Volver Atrás</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $("#tipoMascota").change(function () {
+                var tipoMascotaId = $(this).val();
+                $.ajax({
+                    url: "/Mascotas/ObtenerRazas",
+                    type: "GET",
+                    data: { idTipoMascota: tipoMascotaId },
+                    success: function (data) {
+                        var opciones = "<option value=''>Seleccione una raza</option>";
+                        $.each(data, function (i, item) {
+                            opciones += "<option value='" + item.idRaza + "'>" + item.nombreRaza + "</option>";
+                        });
+                        $("#razaMascota").html(opciones);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(xhr.responseText);
+                    }
+                });
+            });
+        });
+    </script>
+}

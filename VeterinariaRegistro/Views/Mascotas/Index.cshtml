@@ -1,0 +1,83 @@
+﻿@model List<Mascota>
+
+@using System.Security.Claims;
+
+@if (User.Identity!.IsAuthenticated)
+{
+    <h1 class="display-4">
+        Bienvenido
+        @User.Claims.Where(c => c.Type == ClaimTypes.Name).Select(c => c.Value).SingleOrDefault()
+    </h1>
+}
+    <div class="col">
+        <a class="btn btn-primary" asp-controller="Mascotas" asp-action="Create">Nuevo RegistroO</a>
+    </div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                IdMascota
+            </th>
+            <th>
+                Nombre Mascota
+            </th>
+            <th>
+                Nombre propietario
+            </th>
+            <th>
+                Fecha
+            </th>
+            <th>
+                Estado
+            </th>
+            <th>
+                Color
+            </th>
+            <th>
+                Imagen
+            </th>
+            <th>
+                Acciones
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var prod in Model)
+        {
+            <tr>
+                <td>
+                    @prod.IdMascota
+                </td>
+                <td>
+                    @prod.NombreMascota
+                </td>
+                <td>
+                    @prod.NombrePropietario
+                </td>
+                <td>
+                    @prod.Fecha.ToString("dd/MM/yyyy")
+                </td>
+                <td>
+                    @if (prod.estado)
+                    {
+                        <span class="text-success">&#10004;</span>
+                    }
+                    else
+                    {
+                        <span class="text-danger">&#10006;</span>
+                    }
+                </td>
+                <td>
+                    @prod.color
+                </td>
+                <td><img src="/imagenes/@prod.ImagenMascota" width="100" /></td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@prod.IdMascota">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@prod.IdMascota">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@prod.IdMascota">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
